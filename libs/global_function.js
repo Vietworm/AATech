@@ -11,8 +11,10 @@ const _ = require('lodash'),
 
 /**
  * Create Environment to handles templates
- * @param {array} views - List of loaders
- * @returns {object}
+ * @param {array} views - List of view loader on FileSystem
+ * @param {object} viewEngineConfig - Custom setting for nunjucks setting
+ * @param application - extend view engine to Application
+ * @returns {*}
  */
 exports.createNewEnv = function (views, viewEngineConfig, application) {
     let self = this;
@@ -28,8 +30,10 @@ exports.createNewEnv = function (views, viewEngineConfig, application) {
 
 /**
  * Add function to Environment
- * @param {object} env - Environment to add custom filter
- * @returns {object}
+ * @param {object} env - Environment to add custom filter for Nunjucks template engine
+ * @param {object} viewSetting - Custom setting for nunjucks setting
+ * @param app - extend view engine to Application
+ * @returns {*}
  */
 
 exports.getAllVariable = function (env, viewSetting, app) {
@@ -63,6 +67,8 @@ exports.getAllVariable = function (env, viewSetting, app) {
 /**
  * Add function to Environment
  * @param {object} env - Environment to add custom filter
+ * @param {object} viewSetting - Custom setting for nunjucks setting
+ * @param app - extend view engine to Application
  * @returns {object}
  */
 
@@ -151,7 +157,7 @@ exports.getAllCustomFilter = function (env, viewSetting, app) {
     let baseFilterLinks = self.getGlobbedFiles(path.normalize(basePath + "/*.js"));
 
     baseFilterLinks.map(function (link) {
-        let name = path.basename(link, ".js")
+        let name = path.basename(link, ".js");
         let filter = require(link);
         if (typeof filter === 'object' && !_.isEmpty(filter)) {
             filter.name = filter.name || name;
@@ -319,6 +325,7 @@ module.exports.getRawConfig = function getRawConfig() {
         fs.accessSync(__base + 'config/config.js');
         _.assign(conf, require(__base + 'config/config'));
     } catch (err) {
+        // ENOENT exception for accessSync, throw no such file or directory.
         if (err.code === 'ENOENT') {
             fsEx.copySync(path.resolve(__dirname, '..', 'config/config.js'), __base + 'config/config.js');
             _.assign(conf, require(__base + 'config/config'));

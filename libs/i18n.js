@@ -7,13 +7,12 @@ let lang = {};
 
 module.exports = lang;
 module.exports.languageKey = function () {
-    let languageKey = Object.keys(lang).filter(function (key) {
+    return Object.keys(lang).filter(function (key) {
         if(key !== 'loadLanguage' && key !== 'languageKey') {
             return key
         }
     });
-    return languageKey
-}
+};
 
 /**
  * Loading language file.

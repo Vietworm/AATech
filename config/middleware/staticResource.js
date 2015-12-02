@@ -16,4 +16,4 @@ module.exports = function serveStatic() {
     } else {
         app.use(express.static(path.resolve(app.arrFolder + config.resource.path), config.resource.option));
     }
-}
+};
